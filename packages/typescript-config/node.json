@@ -4,6 +4,9 @@
     "compilerOptions": {
         "module": "nodenext",
         "moduleResolution": "nodenext",
-        "noEmit": false
+        "noEmit": false,
+        "types": [
+            "node"
+        ]
     }
 }
