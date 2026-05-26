@@ -32,6 +32,9 @@ importers:
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@repo/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
       argon2:
         specifier: ^0.43.0
         version: 0.43.1
@@ -197,6 +200,19 @@ importers:
       typescript-eslint:
         specifier: ^8.50.0
         version: 8.60.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.2)
+
+  packages/schemas:
+    dependencies:
+      zod:
+        specifier: ^3.22.2
+        version: 3.25.76
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
 
   packages/typescript-config: {}
 
