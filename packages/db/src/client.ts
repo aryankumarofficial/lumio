@@ -13,3 +13,4 @@ export const db = drizzle(queryClient, { schema });
 
 export type Database = typeof db;
 export * from "./schema/index.js"
+export { eq, and, ilike, desc, or, gte, sql, count, sum } from 'drizzle-orm'
