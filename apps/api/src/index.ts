@@ -1,3 +1,14 @@
+import { config } from "dotenv";
+import { fileURLToPath } from "url"
+import { dirname, resolve } from "path"
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+config({
+    path: resolve(__dirname, "..", '.env'),
+    override: false
+})
+
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -28,7 +39,9 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
 app.use(errorHandler)
 
-const port = process.env.PORT || 4000
+console.log(`env from root: ${process.env.PORT} ${Number(process.env.PORT)} ${Number(process.env.PORT || 8080)}`)
+
+const port = Number(process.env.PORT || 4000)
 
 app.listen(port, () => {
     console.log(`API server running on port ${port}`)

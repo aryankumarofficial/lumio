@@ -1,4 +1,4 @@
-import { anthropic, DEFAULT_MODEL, MAX_NOTE_CHARS } from '../client'
+import { getAnthropicClient, DEFAULT_MODEL, MAX_NOTE_CHARS } from '../client'
 import { NOTE_ANALYSIS_SYSTEM, buildNotePrompt } from '../prompts/notes'
 import { AIError, NoteAnalysisWithUsage, StreamChunk } from '../types'
 
@@ -34,7 +34,7 @@ export async function analyseNote(content: string): Promise<NoteAnalysisWithUsag
   validateContent(content)
 
   try {
-    const response = await anthropic.messages.create({
+    const response = await getAnthropicClient().messages.create({
       model: DEFAULT_MODEL,
       max_tokens: 1024,
       system: NOTE_ANALYSIS_SYSTEM,
@@ -69,7 +69,7 @@ export async function* analyseNoteStream(
   }
 
   try {
-    const stream = anthropic.messages.stream({
+    const stream = getAnthropicClient().messages.stream({
       model: DEFAULT_MODEL,
       max_tokens: 1024,
       system: NOTE_ANALYSIS_SYSTEM,
