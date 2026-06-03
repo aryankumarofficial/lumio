@@ -1,19 +1,19 @@
-import { createMessage, streamMessage } from "../client";
+import { createMessage, streamMessage } from "../client/index.js";
 import {
     DEFAULT_MODEL,
     MAX_NOTE_CHARS,
-} from "../client";
+} from "../client/index.js";
 
 import {
     NOTE_ANALYSIS_SYSTEM,
     buildNotePrompt,
-} from "../prompts/notes";
+} from "../prompts/notes.js";
 
 import {
     AIError,
     NoteAnalysisWithUsage,
     StreamChunk,
-} from "../types";
+} from "../types.js";
 
 type ParsedAnalysis = {
     summary: string;

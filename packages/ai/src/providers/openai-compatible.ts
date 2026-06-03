@@ -1,8 +1,8 @@
-import { openai, DEFAULT_MODEL } from "../config/openai";
+import { openai, DEFAULT_MODEL } from "../config/openai.js";
 import type {
     AnthropicCompatibleMessage,
     AnthropicCompatibleStreamEvent,
-} from "../types/openai-compat";
+} from "../types/openai-compat.js";
 
 export async function createMessage({
     system,
