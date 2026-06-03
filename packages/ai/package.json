@@ -1,12 +1,16 @@
 {
     "name": "@repo/ai",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "private": true,
+    "type": "module",
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./dist/index.js"
     },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "scripts": {
-        "check-types": "tsc --noEmit"
+        "check-types": "tsc --noEmit",
+        "build": "tsc"
     },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.52.0",
