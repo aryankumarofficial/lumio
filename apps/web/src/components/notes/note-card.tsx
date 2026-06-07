@@ -3,6 +3,8 @@ import type { Note } from '../../lib/api'
 import { TagBadge } from './tag-badge'
 
 export function NoteCard({ note }: { note: Note }) {
+  const noteTags = note.noteTags ?? []
+
   return (
     <article className="group rounded-2xl border bg-card/70 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-accent/40 hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
@@ -12,9 +14,9 @@ export function NoteCard({ note }: { note: Note }) {
         </span>
       </div>
       {note.content ? <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{note.content}</p> : null}
-      {note.noteTags.length > 0 ? (
+      {noteTags.length > 0 ? (
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {note.noteTags.map(({ tag }) => (
+          {noteTags.map(({ tag }) => (
             <TagBadge key={tag.id} name={tag.name} color={tag.color} />
           ))}
         </div>
