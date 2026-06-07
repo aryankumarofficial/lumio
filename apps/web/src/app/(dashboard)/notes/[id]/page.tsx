@@ -9,6 +9,7 @@ import { Button } from '@repo/ui/components/button'
 import type { Note } from '../../../../lib/api'
 import { notesApi } from '../../../../lib/api'
 import { AiPanel } from '../../../../components/notes/ai-panel'
+import { DeleteNoteDialog } from '../../../../components/notes/delete-note-dialog'
 import { NoteEditor } from '../../../../components/notes/note-editor'
 import { useNotes } from '../../../../hooks/use-notes'
 
@@ -19,7 +20,6 @@ export default function NoteEditorPage() {
   const { updateNote, deleteNote } = useNotes()
   const [note, setNote] = useState<Note | null>(null)
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'idle'>('idle')
-  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (!id) {
@@ -53,16 +53,9 @@ export default function NoteEditorPage() {
   )
 
   const handleDelete = useCallback(async () => {
-    if (!note || !id || deleting) {
+    if (!note || !id) {
       return
     }
-
-    const confirmed = window.confirm(`Delete "${note.title}"? This cannot be undone.`)
-    if (!confirmed) {
-      return
-    }
-
-    setDeleting(true)
 
     try {
       await deleteNote(id)
@@ -70,10 +63,8 @@ export default function NoteEditorPage() {
       toast.success('Note deleted')
     } catch {
       toast.error('Failed to delete note')
-    } finally {
-      setDeleting(false)
     }
-  }, [deleteNote, deleting, id, note, router])
+  }, [deleteNote, id, note, router])
 
   if (!note) {
     return <div className="h-8 w-48 animate-pulse rounded bg-muted" />
@@ -87,10 +78,18 @@ export default function NoteEditorPage() {
             <ArrowLeft className="size-4" />
             Back to notes
           </Button>
-          <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting}>
-            <Trash2 className="size-4" />
-            {deleting ? 'Deleting...' : 'Delete note'}
-          </Button>
+          <DeleteNoteDialog
+            title={note.title}
+            onConfirm={handleDelete}
+            actionLabel="Delete note"
+            loadingLabel="Deleting..."
+            trigger={
+              <Button variant="destructive" size="sm">
+                <Trash2 className="size-4" />
+                Delete note
+              </Button>
+            }
+          />
         </div>
         <NoteEditor note={note} saveStatus={saveStatus} onChange={handleChange} />
       </div>
