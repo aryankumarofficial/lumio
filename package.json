@@ -12,7 +12,10 @@
     "clean:cache": "rimraf .turbo",
     "clean:modules": "rimraf node_modules apps/*/node_modules packages/*/node_modules",
     "clean:build": "rimraf apps/*/.next apps/*/dist packages/*/dist",
-    "reinstall": "pnpm run clean && pnpm install"
+    "reinstall": "pnpm run clean && pnpm install",
+    "docker:up": "docker compose --env-file .env.docker up --build -d",
+    "docker:down": "docker compose --env-file .env.docker down",
+    "docker:logs": "docker compose --env-file .env.docker logs -f"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
