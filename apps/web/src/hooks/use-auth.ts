@@ -8,7 +8,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>
   signup: (name: string, email: string, password: string) => Promise<void>
   logout: () => Promise<void>
-  fetchMe: () => Promise<void>
+  fetchMe: () => Promise<User | null>
 }
 
 export const useAuth = create<AuthState>()(
@@ -33,8 +33,10 @@ export const useAuth = create<AuthState>()(
           set({ loading: true })
           const data = await authApi.me()
           set({ user: data.user })
+          return data.user
         } catch {
           set({ user: null })
+          return null
         } finally {
           set({ loading: false })
         }

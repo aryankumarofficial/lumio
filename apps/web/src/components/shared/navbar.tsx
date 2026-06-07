@@ -20,10 +20,12 @@ export function Navbar() {
     }
 
     hydratedRef.current = true
-    if (!user) {
-      void fetchMe()
-    }
-  }, [fetchMe, user])
+    void fetchMe().then((currentUser) => {
+      if (!currentUser) {
+        router.replace('/login')
+      }
+    })
+  }, [fetchMe, router, user])
 
   async function handleLogout() {
     await logout()
