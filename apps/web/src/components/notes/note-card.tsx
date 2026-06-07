@@ -2,8 +2,27 @@ import { formatDistanceToNow } from 'date-fns'
 import type { Note } from '../../lib/api'
 import { TagBadge } from './tag-badge'
 
+function getPreview(content: string) {
+  const text = content
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\[(.*?)\]\((.*?)\)/g, '$1')
+    .replace(/[*_~>-]/g, '')
+    .replace(/\n{2,}/g, '\n')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  if (!text) {
+    return 'No content yet.'
+  }
+
+  return text.length > 180 ? `${text.slice(0, 180).trimEnd()}...` : text
+}
+
 export function NoteCard({ note }: { note: Note }) {
   const noteTags = note.noteTags ?? []
+  const preview = getPreview(note.content)
 
   return (
     <article className="group rounded-2xl border bg-card/70 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-accent/40 hover:shadow-md">
@@ -13,7 +32,7 @@ export function NoteCard({ note }: { note: Note }) {
           {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
         </span>
       </div>
-      {note.content ? <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{note.content}</p> : null}
+      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{preview}</p>
       {noteTags.length > 0 ? (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {noteTags.map(({ tag }) => (
