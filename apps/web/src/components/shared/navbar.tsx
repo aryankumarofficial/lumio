@@ -17,7 +17,7 @@ export function Navbar() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   useEffect(() => {
-    if (hydratedRef.current || user) {
+    if (hydratedRef.current) {
       return
     }
 
@@ -27,7 +27,7 @@ export function Navbar() {
         router.replace('/login')
       }
     })
-  }, [fetchMe, router, user])
+  }, [fetchMe, router])
 
   useEffect(() => {
     if (!mobileNavOpen) {
@@ -68,9 +68,20 @@ export function Navbar() {
           {mobileNavOpen ? <X className="size-4" /> : <Menu className="size-4" />}
         </Button>
 
-        <div className="mr-auto">
-          <p className="text-sm font-medium">Peblo</p>
-          <p className="text-xs text-muted-foreground">{user?.name ?? 'Preparing your workspace...'}</p>
+        <div className="mr-auto min-w-0">
+          <p className="truncate text-sm font-medium">{user?.name ?? 'Peblo'}</p>
+          {user ? (
+            <>
+              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+              {user.createdAt ? (
+                <p className="text-xs text-muted-foreground">
+                  Since {new Date(user.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+                </p>
+              ) : null}
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground">Preparing your workspace...</p>
+          )}
         </div>
 
         <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
