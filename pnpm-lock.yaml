@@ -203,6 +203,10 @@ importers:
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.19.19
 
   packages/eslint-config:
     devDependencies:
