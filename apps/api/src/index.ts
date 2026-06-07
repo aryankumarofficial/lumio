@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { fileURLToPath } from "url"
 import { dirname, resolve } from "path"
-
+import morgon from "morgan";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 config({
@@ -17,6 +17,7 @@ import { notesRoutes } from './modules/notes/notes.routes.js'
 import { sharedRoutes } from './modules/shared/shared.routes.js'
 import { insightsRoutes } from './modules/insights/insights.routes.js'
 import { errorHandler } from './middleware/error.js'
+import morgan from "morgan";
 
 const app = express()
 
@@ -29,6 +30,8 @@ app.use(
 
 app.use(express.json())
 app.use(cookieParser())
+
+app.use(morgan("dev"));
 
 app.use('/auth', authRoutes)
 app.use('/notes', notesRoutes)
