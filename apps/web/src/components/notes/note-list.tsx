@@ -1,11 +1,50 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Copy, ExternalLink, Share2, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuTrigger } from '@repo/ui/components/ui/context-menu'
 import { useNotes } from '../../hooks/use-notes'
 import { NoteCard } from './note-card'
+import { notesApi } from '../../lib/api'
 
 export function NoteList({ loading }: { loading: boolean }) {
   const { notes } = useNotes()
+  const router = useRouter()
+
+  async function copyText(value: string, message: string) {
+    await navigator.clipboard.writeText(value)
+    toast.success(message)
+  }
+
+  async function handleCopyLink(noteId: string) {
+    await copyText(`${window.location.origin}/notes/${noteId}`, 'Note link copied')
+  }
+
+  async function handleShare(noteId: string) {
+    try {
+      const { shareId } = await notesApi.share(noteId)
+      await copyText(`${window.location.origin}/shared/${shareId}`, 'Share link copied')
+    } catch {
+      toast.error('Failed to share note')
+    }
+  }
+
+  async function handleDelete(noteId: string, title: string) {
+    const confirmed = window.confirm(`Delete "${title}"? This cannot be undone.`)
+    if (!confirmed) {
+      return
+    }
+
+    try {
+      await useNotes.getState().deleteNote(noteId)
+      toast.success('Note deleted')
+      router.refresh()
+    } catch {
+      toast.error('Failed to delete note')
+    }
+  }
 
   if (loading) {
     return (
@@ -28,9 +67,34 @@ export function NoteList({ loading }: { loading: boolean }) {
   return (
     <div className="space-y-3">
       {notes.map((note) => (
-        <Link key={note.id} href={`/notes/${note.id}`} className="block">
-          <NoteCard note={note} />
-        </Link>
+        <ContextMenu key={note.id}>
+          <ContextMenuTrigger asChild>
+            <Link href={`/notes/${note.id}`} className="block">
+              <NoteCard note={note} />
+            </Link>
+          </ContextMenuTrigger>
+          <ContextMenuContent className="w-72">
+            <ContextMenuLabel>Note actions</ContextMenuLabel>
+            <ContextMenuItem onSelect={() => router.push(`/notes/${note.id}`)}>
+              <ExternalLink className="mr-2 size-4" />
+              Open note
+              <ContextMenuShortcut>Enter</ContextMenuShortcut>
+            </ContextMenuItem>
+            <ContextMenuItem onSelect={() => void handleCopyLink(note.id)}>
+              <Copy className="mr-2 size-4" />
+              Copy note link
+            </ContextMenuItem>
+            <ContextMenuItem onSelect={() => void handleShare(note.id)}>
+              <Share2 className="mr-2 size-4" />
+              Share note
+            </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem className="text-destructive focus:text-destructive" onSelect={() => void handleDelete(note.id, note.title)}>
+              <Trash2 className="mr-2 size-4" />
+              Delete note
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       ))}
     </div>
   )
