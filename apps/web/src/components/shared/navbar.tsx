@@ -13,15 +13,18 @@ export function Navbar() {
   const { theme, setTheme } = useTheme()
   const { user, logout, fetchMe } = useAuth()
   const router = useRouter()
-  const hydratedRef = useRef(false)
+  const fetchedRef = useRef(false)
+  const [mounted, setMounted] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   useEffect(() => {
-    if (hydratedRef.current) {
+    setMounted(true)
+
+    if (fetchedRef.current) {
       return
     }
 
-    hydratedRef.current = true
+    fetchedRef.current = true
     void fetchMe().then((currentUser) => {
       if (!currentUser) {
         router.replace('/login')
@@ -69,9 +72,9 @@ export function Navbar() {
         </Button>
 
         <div className="mr-auto min-w-0">
-          <p className="truncate text-sm font-medium">{user?.name ?? 'Peblo'}</p>
-          {user ? (
+          {mounted && user ? (
             <>
+              <p className="truncate text-sm font-medium">{user.name}</p>
               <p className="truncate text-xs text-muted-foreground">{user.email}</p>
               {user.createdAt ? (
                 <p className="text-xs text-muted-foreground">
@@ -80,12 +83,20 @@ export function Navbar() {
               ) : null}
             </>
           ) : (
-            <p className="text-xs text-muted-foreground">Preparing your workspace...</p>
+            <>
+              <p className="truncate text-sm font-medium">Peblo</p>
+              <p className="text-xs text-muted-foreground">Preparing your workspace...</p>
+            </>
           )}
         </div>
 
-        <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-          {theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Toggle theme"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        >
+          {mounted && theme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
         </Button>
         <Button variant="ghost" size="icon" onClick={handleLogout}>
           <LogOut className="size-4" />
