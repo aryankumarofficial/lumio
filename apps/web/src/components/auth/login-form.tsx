@@ -2,31 +2,34 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState, type FormEvent } from 'react'
+import { type FormEvent } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@repo/ui/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card'
 import { Input } from '@repo/ui/components/input'
 import { Label } from '@repo/ui/components/label'
 import { useAuth } from '../../hooks/use-auth'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { loginSchema } from '@repo/schemas'
+import type { Login } from '@repo/schemas'
 
 export function LoginForm() {
   const router = useRouter()
   const { login } = useAuth()
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ email: '', password: '' })
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setLoading(true)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Login>({ resolver: zodResolver(loginSchema) })
 
+  async function onSubmit(data: Login) {
     try {
-      await login(form.email, form.password)
+      await login(data.email, data.password)
       router.push('/notes')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Login failed')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -38,35 +41,21 @@ export function LoginForm() {
         <CardDescription>Sign in to your Peblo workspace</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={form.email}
-              onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-              required
-            />
+            <Input id="email" type="email" autoComplete="email" placeholder="you@example.com" {...register('email')} />
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              value={form.password}
-              onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-              required
-            />
+            <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••" {...register('password')} />
+            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">

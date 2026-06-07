@@ -99,6 +99,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.1.1
+        version: 3.10.0(react-hook-form@7.77.0(react@19.2.6))
+      '@repo/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -126,6 +132,9 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.6(react@19.2.6)
+      react-hook-form:
+        specifier: ^7.45.0
+        version: 7.77.0(react@19.2.6)
       recharts:
         specifier: ^2.15.3
         version: 2.15.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -985,6 +994,11 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
+
+  '@hookform/resolvers@3.10.0':
+    resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -4383,6 +4397,12 @@ packages:
     peerDependencies:
       react: ^19.2.6
 
+  react-hook-form@7.77.0:
+    resolution: {integrity: sha512-Sslh9YDYc0GDlWT/lxasnIduNo4v3yyvqRGvmGKUre5AFjDs/HV9/OafHGD8d+sB2yoL4UIL9L8X9i0WlZZebg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -5625,6 +5645,10 @@ snapshots:
   '@hono/node-server@1.19.14(hono@4.12.23)':
     dependencies:
       hono: 4.12.23
+
+  '@hookform/resolvers@3.10.0(react-hook-form@7.77.0(react@19.2.6))':
+    dependencies:
+      react-hook-form: 7.77.0(react@19.2.6)
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -9400,6 +9424,10 @@ snapshots:
     dependencies:
       react: 19.2.6
       scheduler: 0.27.0
+
+  react-hook-form@7.77.0(react@19.2.6):
+    dependencies:
+      react: 19.2.6
 
   react-is@16.13.1: {}
 
