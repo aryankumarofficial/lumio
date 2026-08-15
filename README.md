@@ -1,159 +1,611 @@
-# Turborepo starter
+# Peblo — AI Notes
 
-This Turborepo starter is maintained by the Turborepo core team.
+> A focused AI-powered workspace for writing, organizing, analyzing, and sharing notes.
 
-## Using this example
+**Peblo AI Notes** is a full-stack notes application developed as part of the **Peblo engineering assignment**.
 
-Run the following command:
+The project combines a modern Next.js frontend with a dedicated Express API, PostgreSQL, Drizzle ORM, shared TypeScript packages, authentication, note management, analytics, and AI-powered note analysis.
 
-```sh
-npx create-turbo@latest
+---
+
+## ✨ Features
+
+### 📝 Notes
+
+- Create, edit, and delete notes
+- Rich Markdown-based note editor
+- Live Markdown preview
+- Automatic save state
+- Search notes by title and content
+- Archive notes
+- Organize notes using tags
+- Recently updated notes
+
+### 🤖 AI-Powered Analysis
+
+Analyze notes using an integrated AI layer.
+
+The AI can:
+
+- Generate concise summaries
+- Extract action items
+- Suggest improved note titles
+- Stream analysis results using Server-Sent Events (SSE)
+- Persist generated AI results for later access
+
+The AI layer is implemented as a shared workspace package, allowing the API to remain independent from the underlying model provider.
+
+### 📊 Insights
+
+The workspace provides analytics including:
+
+- Total notes
+- AI generations
+- Archived notes
+- Unique tags
+- Weekly activity
+- Recently edited notes
+- Tag usage
+
+### 🔐 Authentication & Security
+
+- User registration and login
+- Password hashing with Argon2
+- JWT-based authentication
+- HTTP-only cookie-based session handling
+- Protected dashboard routes
+- User-scoped database queries
+- Request validation with Zod
+- Centralized API error handling
+
+### 🔗 Note Sharing
+
+Notes can be made publicly accessible through generated share identifiers without exposing private workspace data.
+
+### 🐳 Development & Deployment
+
+- pnpm workspaces
+- Turborepo
+- Docker Compose support
+- TypeScript across the stack
+- Shared packages for database, schemas, AI, UI, and configuration
+- API health endpoint
+- Separate frontend and backend services
+
+---
+
+## 🏗️ Architecture
+
+```text
+                         ┌─────────────────────┐
+                         │      Next.js        │
+                         │       Web App       │
+                         │                     │
+                         │  Auth / Notes /     │
+                         │  Insights / Editor  │
+                         └──────────┬──────────┘
+                                    │
+                              HTTP / SSE
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │      Express API    │
+                         │                     │
+                         │ Auth / Notes /      │
+                         │ Shared / Insights   │
+                         └───────┬───────┬─────┘
+                                 │       │
+                       ┌─────────┘       └──────────┐
+                       ▼                            ▼
+              ┌─────────────────┐          ┌─────────────────┐
+              │   PostgreSQL    │          │    AI Layer     │
+              │                 │          │                 │
+              │    Drizzle ORM  │          │ OpenAI /        │
+              │                 │          │ Anthropic       │
+              └─────────────────┘          └─────────────────┘
+````
+
+---
+
+## 📦 Monorepo Structure
+
+```text
+lumio/
+├── apps/
+│   ├── web/                    # Next.js frontend
+│   │   └── src/
+│   │       ├── app/
+│   │       │   ├── (auth)/     # Login / Signup
+│   │       │   ├── (dashboard)/
+│   │       │   │   ├── notes/
+│   │       │   │   └── insights/
+│   │       │   ├── shared/     # Public shared notes
+│   │       │   └── ...
+│   │       ├── components/
+│   │       ├── hooks/
+│   │       ├── lib/
+│   │       └── middleware.ts
+│   │
+│   └── api/                    # Express backend
+│       └── src/
+│           ├── middleware/
+│           ├── modules/
+│           │   ├── auth/
+│           │   ├── notes/
+│           │   ├── shared/
+│           │   └── insights/
+│           └── index.ts
+│
+├── packages/
+│   ├── ai/                     # AI provider abstraction
+│   ├── db/                     # Database & Drizzle ORM
+│   ├── schemas/                # Shared Zod schemas
+│   ├── ui/                     # Shared UI components
+│   ├── eslint-config/          # Shared ESLint configuration
+│   └── typescript-config/      # Shared TypeScript configuration
+│
+├── docker-compose.yml
+├── package.json
+├── pnpm-workspace.yaml
+└── turbo.json
 ```
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## 🛠️ Tech Stack
 
-### Apps and Packages
+### Frontend
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+* **Next.js**
+* **React**
+* **TypeScript**
+* Tailwind CSS
+* Markdown editor / preview
+* Client-side API integration
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Backend
 
-### Utilities
+* **Node.js**
+* **Express 5**
+* TypeScript
+* JWT
+* Argon2
+* Zod
+* Cookie Parser
+* CORS
+* Morgan
 
-This Turborepo has some additional tools already setup for you:
+### Database
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+* **PostgreSQL**
+* **Drizzle ORM**
 
-### Build
+### AI
 
-To build all apps and packages, run the following command:
+* OpenAI SDK
+* GEMINI SDK
+* Shared AI abstraction
+* AI summarization
+* Action-item extraction
+* Suggested title generation
+* Server-Sent Events (SSE)
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### Tooling
 
-```sh
-cd my-turborepo
-turbo build
+* **pnpm**
+* **Turborepo**
+* TypeScript
+* ESLint
+* Prettier
+* Docker / Docker Compose
+
+---
+
+## 🔄 AI Analysis Flow
+
+When a user requests an AI analysis of a note:
+
+```text
+User
+ │
+ │ "Summarise note"
+ ▼
+Next.js
+ │
+ │ POST /notes/:id/summarise
+ ▼
+Express API
+ │
+ ├── Authenticate user
+ ├── Validate note ownership
+ │
+ ▼
+AI Package
+ │
+ ├── Send note content to AI provider
+ ├── Generate summary
+ ├── Extract action items
+ └── Generate suggested title
+ │
+ ▼
+PostgreSQL
+ │
+ └── Persist AI generation
+ │
+ ▼
+Next.js
+ │
+ └── Display AI analysis
 ```
 
-Without global `turbo`, use your package manager:
+For streaming analysis, the API exposes an **SSE response** so generated chunks can be delivered incrementally to the client.
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+---
+
+## 🔐 Authentication Flow
+
+```text
+Signup
+  │
+  ▼
+Validate input
+  │
+  ▼
+Hash password with Argon2
+  │
+  ▼
+Store user
+  │
+  ▼
+Login
+  │
+  ▼
+Verify password
+  │
+  ▼
+Generate JWT
+  │
+  ▼
+HTTP-only cookie
+  │
+  ▼
+Protected API / Dashboard
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+All note operations are scoped to the authenticated user.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+---
 
-```sh
-turbo build --filter=docs
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have installed:
+
+* Node.js 18+
+* pnpm
+* PostgreSQL
+* Git
+
+Optional:
+
+* Docker
+* Docker Compose
+
+---
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AryanKumarOfficial/lumio.git
+
+cd lumio
 ```
 
-Without global `turbo`:
+---
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+### 2. Install dependencies
+
+```bash
+pnpm install
 ```
 
-### Develop
+---
 
-To develop all apps and packages, run the following command:
+### 3. Configure environment variables
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Create the required environment files for the web application, API, database, and AI integration according to the environment variable definitions used by the project.
 
-```sh
-cd my-turborepo
-turbo dev
+Typical configuration includes:
+
+```env
+DATABASE_URL=postgresql://...
+JWT_SECRET=your-secret
+CLIENT_URL=http://localhost:3000
+PORT=4000
+
+OPENAI_API_KEY=...
+ANTHROPIC_API_KEY=...
 ```
 
-Without global `turbo`, use your package manager:
+> Do not commit real API keys, database credentials, or JWT secrets.
 
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
+---
+
+### 4. Start the development environment
+
+From the repository root:
+
+```bash
+pnpm dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+The web application runs on:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
+```text
+http://localhost:3000
 ```
 
-Without global `turbo`:
+The API runs on:
 
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```text
+http://localhost:4000
 ```
 
-### Remote Caching
+The API also exposes:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
+```text
+GET /health
 ```
 
-Without global `turbo`, use your package manager:
+which returns:
 
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
+```json
+{
+  "status": "ok"
+}
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+---
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 🐳 Docker
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+The repository includes Docker Compose configuration for running the application services.
 
-```sh
-turbo link
+Start the environment:
+
+```bash
+pnpm docker:up
 ```
 
-Without global `turbo`:
+View logs:
 
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
+```bash
+pnpm docker:logs
 ```
 
-## Useful Links
+Stop the environment:
 
-Learn more about the power of Turborepo:
+```bash
+pnpm docker:down
+```
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+---
+
+## 🧪 Development Commands
+
+### Start development servers
+
+```bash
+pnpm dev
+```
+
+### Build the entire monorepo
+
+```bash
+pnpm build
+```
+
+### Run linting
+
+```bash
+pnpm lint
+```
+
+### Check TypeScript
+
+```bash
+pnpm check-types
+```
+
+### Format the repository
+
+```bash
+pnpm format
+```
+
+### Clean build artifacts
+
+```bash
+pnpm clean:build
+```
+
+### Reinstall dependencies
+
+```bash
+pnpm reinstall
+```
+
+---
+
+## 📡 API Modules
+
+The Express API is organized into domain modules:
+
+| Module      | Purpose                              |
+| ----------- | ------------------------------------ |
+| `/auth`     | Registration and authentication      |
+| `/notes`    | Note CRUD, search, tags, AI analysis |
+| `/shared`   | Public/shared notes                  |
+| `/insights` | Workspace analytics                  |
+| `/health`   | API health check                     |
+
+---
+
+## 📁 Shared Packages
+
+The monorepo keeps cross-application functionality in reusable packages.
+
+### `@repo/ai`
+
+Provides the AI integration layer and abstracts AI provider functionality from the API.
+
+### `@repo/db`
+
+Contains PostgreSQL database configuration, Drizzle ORM definitions, relations, and database access.
+
+### `@repo/schemas`
+
+Contains shared Zod validation schemas used across application boundaries.
+
+### `@repo/ui`
+
+Contains reusable UI components.
+
+### `@repo/eslint-config`
+
+Shared linting configuration.
+
+### `@repo/typescript-config`
+
+Shared TypeScript configuration.
+
+---
+
+## 🎯 Engineering Decisions
+
+### Why a monorepo?
+
+The application contains multiple independently structured services and shared functionality.
+
+Turborepo allows the project to:
+
+* Share code between applications
+* Reuse TypeScript types and schemas
+* Centralize tooling configuration
+* Build and run services efficiently
+* Keep frontend and backend boundaries explicit
+
+### Why a separate Express API?
+
+The frontend and backend are intentionally separated.
+
+This provides:
+
+* Clear API boundaries
+* Independent backend development
+* Reusable APIs
+* Easier future client expansion
+* Separation of presentation and business logic
+
+### Why Drizzle?
+
+Drizzle provides strongly typed database access while keeping SQL concepts relatively close to the application layer.
+
+### Why Zod?
+
+Zod provides runtime validation for incoming API data while maintaining TypeScript-friendly schemas.
+
+### Why an AI package?
+
+AI provider logic is isolated from the Express controllers so that application logic doesn't become tightly coupled to a single model provider.
+
+---
+
+## 🔒 Security Considerations
+
+The application includes several security-oriented practices:
+
+* Password hashing using Argon2
+* JWT authentication
+* HTTP-only authentication cookies
+* Protected dashboard routes
+* User ownership checks for note operations
+* Runtime request validation
+* Centralized error handling
+* CORS configuration
+* Environment-based secret management
+
+Production deployments should additionally configure:
+
+* HTTPS
+* Secure cookies
+* Rate limiting
+* AI usage limits
+* Request size limits
+* Database connection limits
+* Production logging/monitoring
+* Secret management
+
+---
+
+## 📸 Application
+
+### Landing Page
+
+![Homepage](docs/images/homepage.png)
+
+### Authentication
+
+![Signup](docs/images/signup.png)
+![Login](docs/images/login.png)
+
+### Notes Workspace
+
+![Notes](docs/images/notes.png)
+
+### AI Note Analysis
+
+![AI-generated summaries and suggested titles are displayed alongside the note editor.](docs/images/ai_analysis.png)
+
+### Insights
+
+![Workspace-level analytics provide an overview of note activity and AI usage.
+](docs/images/insights.png)
+---
+
+## 🧩 Assignment Context
+
+This project was developed as part of the **Peblo engineering assignment**.
+
+The implementation focuses on demonstrating:
+
+* Full-stack TypeScript development
+* Modern React/Next.js architecture
+* Backend API design
+* Authentication and authorization
+* Relational database modeling
+* AI integration
+* Streaming responses
+* Shared monorepo architecture
+* Production-oriented development practices
+* Clean and consistent product UI
+
+---
+
+## 👨‍💻 Author
+
+**Aryan Kumar**
+
+Full Stack Developer
+B.Tech Computer Science & Engineering
+
+GitHub:
+[https://github.com/AryanKumarOfficial](https://github.com/AryanKumarOfficial)
+
+---
+
+## 📄 License
+
+This project was created for the Peblo engineering assignment.
+
