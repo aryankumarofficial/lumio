@@ -38,6 +38,16 @@ app.use('/notes', notesRoutes)
 app.use('/shared', sharedRoutes)
 app.use('/insights', insightsRoutes)
 
+
+app.get("/", (_req, res) => {
+    res.json({
+        name: "Lumio API",
+        status: "ok",
+        version: "1.0.0",
+        health: "/health",
+    });
+});
+
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
 app.use(errorHandler)
