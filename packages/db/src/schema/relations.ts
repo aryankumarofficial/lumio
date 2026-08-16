@@ -3,10 +3,12 @@ import {users} from './user.js'
 import {notes} from './notes.js'
 import {noteTags, tags} from './tags.js'
 import {aiGenerations} from './ai-generations.js'
+import {verification} from "./verification.js";
 
 export const usersRelations = relations(users, ({many}) => ({
     notes: many(notes),
     tags: many(tags),
+    verification: many(verification),
 }))
 
 export const notesRelations = relations(notes, ({one, many}) => ({
@@ -28,3 +30,13 @@ export const noteTagsRelations = relations(noteTags, ({one}) => ({
 export const aiGenerationsRelations = relations(aiGenerations, ({one}) => ({
     note: one(notes, {fields: [aiGenerations.noteId], references: [notes.id]}),
 }))
+
+export const verificationRelations = relations(
+    verification,
+    ({one}) => ({
+        user: one(users, {
+            fields: [verification.userId],
+            references: [users.id],
+        }),
+    }),
+);
