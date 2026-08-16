@@ -3,6 +3,7 @@ import {db, users} from '@repo/db'
 import {loginSchema, signupSchema} from '@repo/schemas'
 import {hashPassword, verifyPassword} from '../../lib/password.js'
 import {signToken} from '../../lib/jwt.js'
+import {sendAccountVerification} from "../verification/verification.service.js";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -13,8 +14,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         })
 
         if (existing) {
-            res.status(409).json({error: 'Email already in use'})
-            return
+            return res.status(409).json({error: 'Email already in use'})
         }
 
         const passwordHash = await hashPassword(body.password)
@@ -26,17 +26,14 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
         if (!user) throw new Error('Failed to create user')
 
-        const token = signToken({userId: user.id, email: user.email})
-
-        res
-            .cookie('token', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
-                maxAge: 7 * 24 * 60 * 60 * 1000,
-            })
-            .status(201)
-            .json({user})
+        await sendAccountVerification({
+            userId: user.id,
+            email: user.email,
+        })
+        return res.status(201).json({
+            success: true,
+            message: `Signup Success! verify your account to access the App.`
+        })
     } catch (err) {
         next(err)
     }
@@ -51,17 +48,20 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         })
 
         if (!user) {
-            res.status(401).json({error: 'Invalid credentials'})
-            return
+            return res.status(401).json({error: 'Invalid credentials'})
         }
 
         const valid = await verifyPassword(user.passwordHash, body.password)
 
         if (!valid) {
-            res.status(401).json({error: 'Invalid credentials'})
-            return
+            return res.status(401).json({error: 'Invalid credentials'})
+
         }
 
+        const isVerified = user.isVerified;
+        if (!isVerified) {
+            return res.status(400).json({error: 'Please verify your account to access the App.gg'})
+        }
         const token = signToken({userId: user.id, email: user.email})
 
         res
@@ -108,5 +108,13 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
         res.json({user})
     } catch (err) {
         next(err)
+    }
+}
+
+export const sendVerification = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+    } catch (err) {
+        next(err);
     }
 }
