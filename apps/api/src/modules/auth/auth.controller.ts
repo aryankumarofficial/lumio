@@ -57,7 +57,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
         const isVerified = user.isVerified;
         if (!isVerified) {
-            return res.status(400).json({error: 'Please verify your account to access the App.gg'})
+            return res.status(400).json({error: 'Please verify your account to access the App'})
         }
         const token = signToken({userId: user.id, email: user.email})
 
