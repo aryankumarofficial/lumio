@@ -1,5 +1,7 @@
 import {db, eq, NewVerification, verification} from "@repo/db";
 import {ValidVerificationInput} from "./verifiaction.type.js";
+import {gt, isNull} from "drizzle-orm";
+import {hashToken} from "../../lib/token.js";
 
 export const createVerification = async (input: NewVerification) => {
     const [record] = await db.insert(verification).values(input).returning();
@@ -7,24 +9,16 @@ export const createVerification = async (input: NewVerification) => {
 }
 
 export const findValidVerification = async (filter: ValidVerificationInput) => {
+    const hashedToken = hashToken(filter.token);
     return await db.query.verification.findFirst({
         where: (verification, {and, eq, gte, isNotNull}) => and(
-            eq(verification.token, filter.token),
+            eq(verification.token, hashedToken),
             eq(verification.type, filter.type),
-            gte(verification.expiresAt, new Date()),
-            isNotNull(verification.usedAt)
+            gt(verification.expiresAt, new Date()),
+            isNull(verification.usedAt)
         )
         ,
         orderBy: (verification, {desc}) => desc(verification.updatedAt),
 
     });
-}
-
-export const invalidateVerification = async (id: string) => {
-    const [record] = await db.update(verification).set({
-        ...verification,
-        usedAt: new Date(),
-        updatedAt: new Date()
-    }).where(eq(verification.id, id)).returning();
-    return record;
 }

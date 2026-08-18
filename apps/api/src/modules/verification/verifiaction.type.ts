@@ -6,6 +6,10 @@ export interface ValidVerificationInput {
 }
 
 export interface GenerateVerification {
-    userId:string;
-    email:string;
+    userId: string;
+    email: string;
+}
+
+export interface VerifyAccountInput {
+    token: string;
 }

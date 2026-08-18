@@ -1,10 +1,21 @@
 import {pgEnum, pgTable, text, timestamp, uuid} from "drizzle-orm/pg-core";
 import {users} from "./user.js";
 
-export const verificationTypeEnum = pgEnum("verification_type", [
-    "email_verification",
-    "password_reset",
-]);
+export const VerificationType = {
+    EMAIL_VERIFICATION: "email_verification",
+    PASSWORD_RESET: "password_reset",
+} as const;
+
+export type VerificationType =
+    (typeof VerificationType)[keyof typeof VerificationType];
+
+export const verificationTypeEnum = pgEnum(
+    "verification_type",
+    Object.values(VerificationType) as [
+        VerificationType,
+        ...VerificationType[]
+    ],
+);
 
 export const verification = pgTable("verifications", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -41,4 +52,3 @@ export const verification = pgTable("verifications", {
 
 export type Verification = typeof verification.$inferSelect;
 export type NewVerification = typeof verification.$inferInsert;
-export type VerificationType = typeof verification.type;
