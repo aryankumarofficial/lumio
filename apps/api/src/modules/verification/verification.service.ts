@@ -4,13 +4,13 @@ import {and, db, eq, users, verification, VerificationType} from "@repo/db"
 import {gt, isNull} from "drizzle-orm";
 import {generateRandomToken, hashToken} from "../../lib/token.js";
 
-export const sendAccountVerification = async (payload: GenerateVerification) => {
+export const sendAccountVerification = async (userId:string) => {
     try {
         const rawToken = generateRandomToken();
         const hashedToken = hashToken(rawToken);
         const newVerification = await createVerification({
             type: VerificationType.EMAIL_VERIFICATION,
-            userId: payload.userId,
+            userId: userId,
             token: hashedToken,
             expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         })

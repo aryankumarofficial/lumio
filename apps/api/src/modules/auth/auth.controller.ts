@@ -26,10 +26,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
         if (!user) throw new Error('Failed to create user')
 
-        await sendAccountVerification({
-            userId: user.id,
-            email: user.email,
-        })
+        await sendAccountVerification(user.id)
         return res.status(201).json({
             success: true,
             message: `Signup Success! verify your account to access the App.`

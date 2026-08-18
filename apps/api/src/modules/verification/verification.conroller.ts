@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express"
 import {db, eq, users} from "@repo/db";
-import {sendAccountVerification} from "./verification.service.js";
+import {sendAccountVerification, verifyAccount} from "./verification.service.js";
 
 export const requestVerificationLinkController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -30,16 +30,34 @@ export const requestVerificationLinkController = async (req: Request, res: Respo
             })
         }
 
-        await sendAccountVerification({
-            userId: userExists.id,
-            email
-        })
+        await sendAccountVerification(
+            userExists.id,
+        )
 
         return res.status(200).json({
             success: true,
             message: `If an account with this email exists a verification link will be sent to this email`
         })
 
+    } catch (err) {
+        next(err)
+    }
+}
+
+export const verifyAccountController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {token} = req.body;
+        if (typeof token !== "string") {
+            return res.status(400).json({error: 'Invalid Link'});
+        }
+        const user = await verifyAccount({
+            token
+        })
+        return res.status(200).json({
+            success: true,
+            message: `Account verified successfully`,
+            user
+        })
     } catch (err) {
         next(err)
     }
