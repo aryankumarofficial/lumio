@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "email:dev": "email dev",
+    "email:dev": "email dev --dir ./src/templates",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
@@ -22,6 +22,7 @@
     "react": "^19.2.0"
   },
   "devDependencies": {
+    "@react-email/ui": "6.9.2",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/nodemailer": "^8.0.1",
