@@ -12,6 +12,7 @@
     "dependencies": {
         "@repo/ai": "workspace:*",
         "@repo/db": "workspace:*",
+        "@repo/email": "workspace:^",
         "@repo/schemas": "workspace:*",
         "argon2": "^0.43.0",
         "cookie-parser": "^1.4.7",
