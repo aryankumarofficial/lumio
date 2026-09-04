@@ -11,6 +11,8 @@ import {sharedRoutes} from './modules/shared/shared.routes.js'
 import {insightsRoutes} from './modules/insights/insights.routes.js'
 import {errorHandler} from './middleware/error.js'
 import {verificationRoutes} from "./modules/verification/verification.route.js";
+import {db} from "@repo/db";
+import {sql} from "drizzle-orm";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -49,7 +51,25 @@ app.get("/", (_req, res) => {
     });
 });
 
-app.get('/health', (_req, res) => res.json({status: 'ok'}))
+app.get('/health', async (_req, res) => {
+    try {
+        await db.execute(sql`SELECT 1`);
+        return res.status(200).json({
+            status: 'UP',
+            timestamp: new Date().toISOString(),
+            database: 'connected'
+        });
+    } catch (err) {
+        console.error(`Failed to connect Database: `, err);
+        return res
+            .status(503)
+            .json({
+                status: 'DOWN',
+                timestamp: new Date().toISOString(),
+                error: 'Database connection failed'
+            })
+    }
+})
 
 app.use(errorHandler)
 
