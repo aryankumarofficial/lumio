@@ -20,13 +20,16 @@
     "@react-email/render": "^2.1.0",
     "dotenv": "^17.4.2",
     "nodemailer": "^9.0.5",
-    "react": "^19.2.0"
+    "react": "^19.2.6",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@react-email/ui": "6.9.2",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/nodemailer": "^8.0.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
     "react-email": "^6.9.2",
     "typescript": "^7.0.2"
   }
