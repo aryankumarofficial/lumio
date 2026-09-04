@@ -219,6 +219,9 @@ importers:
       '@react-email/render':
         specifier: ^2.1.0
         version: 2.1.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       nodemailer:
         specifier: ^9.0.5
         version: 9.0.5
