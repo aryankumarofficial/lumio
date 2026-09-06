@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "email dev --dir ./src/templates",
+    "dev": "email dev --dir ./src/templates --port 3001",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

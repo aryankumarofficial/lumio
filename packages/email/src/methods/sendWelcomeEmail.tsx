@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {pretty, render} from "@react-email/render";
 import WelcomeEmail from "../templates/WelcomeEmail";
 import {SendMailOptions} from "nodemailer";
