@@ -1,3 +1,3 @@
-export {sendVerificationEmail} from "./sendVerificationEmail";
-export {sendWelcomeEmail} from "./sendWelcomeEmail";
-export {resendVerificationEmail} from "./resendVerificationEmail";
+export {sendVerificationEmail} from "./sendVerificationEmail.js";
+export {sendWelcomeEmail} from "./sendWelcomeEmail.js";
+export {resendVerificationEmail} from "./resendVerificationEmail.js";

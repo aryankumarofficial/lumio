@@ -9,7 +9,7 @@ export const requestVerificationLinkController = async (req: Request, res: Respo
             return res.status(400).json({error: 'Email is required'})
         }
         // verify by email REGEX
-        const isValidEmail = /[A-Za-z]/.test(email) // TODO: YET TO WRITE PROPER REGEX
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
         if (!isValidEmail) {
             return res.status(400).json({error: 'Invalid email address'})
         }

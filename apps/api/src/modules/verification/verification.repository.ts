@@ -1,11 +1,29 @@
-import {db, eq, NewVerification, verification} from "@repo/db";
+import {db, NewVerification, users, verification} from "@repo/db";
 import {ValidVerificationInput} from "./verifiaction.type.js";
-import {gt, isNull} from "drizzle-orm";
+import {gt, eq, isNull} from "drizzle-orm";
 import {hashToken} from "../../lib/token.js";
+import {email} from "zod/v4";
 
 export const createVerification = async (input: NewVerification) => {
-    const [record] = await db.insert(verification).values(input).returning();
-    return record;
+    return await db.transaction(async (trx) => {
+        const [verificationRecord] = await trx
+            .insert(verification)
+            .values(input)
+            .returning()
+        const [user] = await trx
+            .select({
+                userId: users.id,
+                email: users.email,
+                name: users.name
+            })
+            .from(users)
+            .where(eq(users.id, verificationRecord!.userId))
+            .limit(1)
+        return {
+            verification: verificationRecord,
+            user,
+        }
+    })
 }
 
 export const findValidVerification = async (filter: ValidVerificationInput) => {

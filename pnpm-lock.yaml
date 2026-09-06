@@ -36,7 +36,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/db
       '@repo/email':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/email
       '@repo/schemas':
         specifier: workspace:*

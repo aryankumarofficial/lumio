@@ -1,1 +1,1 @@
-export * from "./methods/index";
+export * from "./methods/index.js";
