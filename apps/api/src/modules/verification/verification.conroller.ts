@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express"
 import {db, eq, users} from "@repo/db";
-import {sendAccountVerification, verifyAccount} from "./verification.service.js";
+import {REQUEST_TYPE, sendAccountVerification, verifyAccount} from "./verification.service.js";
 
 export const requestVerificationLinkController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -31,7 +31,10 @@ export const requestVerificationLinkController = async (req: Request, res: Respo
         }
 
         await sendAccountVerification(
-            userExists.id,
+            {
+                userId: userExists.id,
+                type: REQUEST_TYPE.RESEND_VERIFICATION
+            }
         )
 
         return res.status(200).json({

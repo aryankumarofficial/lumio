@@ -3,7 +3,7 @@ import {db, users} from '@repo/db'
 import {loginSchema, signupSchema} from '@repo/schemas'
 import {hashPassword, verifyPassword} from '../../lib/password.js'
 import {signToken} from '../../lib/jwt.js'
-import {sendAccountVerification} from "../verification/verification.service.js";
+import {REQUEST_TYPE, sendAccountVerification} from "../verification/verification.service.js";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -26,7 +26,10 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
         if (!user) throw new Error('Failed to create user')
 
-        await sendAccountVerification(user.id)
+        await sendAccountVerification({
+            userId: user.id,
+            type: REQUEST_TYPE.ACCOUNT_CREATION
+        })
         return res.status(201).json({
             success: true,
             message: `Signup Success! verify your account to access the App.`

@@ -3,9 +3,19 @@ import {VerifyAccountInput} from "./verifiaction.type.js";
 import {and, db, eq, users, verification, VerificationType} from "@repo/db"
 import {gt, isNull} from "drizzle-orm";
 import {generateRandomToken, hashToken} from "../../lib/token.js";
-import {sendVerificationEmail, sendWelcomeEmail} from "@repo/email"
+import {resendVerificationEmail, sendVerificationEmail, sendWelcomeEmail} from "@repo/email"
 
-export const sendAccountVerification = async (userId: string) => {
+export enum REQUEST_TYPE {
+    ACCOUNT_CREATION,
+    RESEND_VERIFICATION,
+}
+
+interface VerificationServiceProps {
+    userId: string;
+    type: REQUEST_TYPE;
+}
+
+export const sendAccountVerification = async ({userId, type}: VerificationServiceProps) => {
     try {
         const rawToken = generateRandomToken();
         const hashedToken = hashToken(rawToken);
@@ -21,11 +31,19 @@ export const sendAccountVerification = async (userId: string) => {
         }
 
         const verificationUrl = `${process.env.CLIENT_URL}/verify?token=${encodeURIComponent(rawToken)}`;
-        await sendVerificationEmail({
-            name: user.name,
-            link: verificationUrl,
-            email: user.email
-        });
+        if (type === REQUEST_TYPE.ACCOUNT_CREATION) {
+            await sendVerificationEmail({
+                name: user.name,
+                email: user.email,
+                link: verificationUrl,
+            });
+        } else if (type === REQUEST_TYPE.RESEND_VERIFICATION) {
+            await resendVerificationEmail({
+                email: user.email,
+                name: user.name,
+                link: verificationUrl,
+            })
+        }
     } catch (err) {
         throw new Error("Failed to send Verification Link", {
             cause: err
