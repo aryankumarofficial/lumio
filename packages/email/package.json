@@ -10,8 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
-    "email:dev": "email dev --dir ./src/templates",
+    "dev": "email dev --dir ./src/templates",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
