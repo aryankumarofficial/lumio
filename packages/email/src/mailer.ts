@@ -9,12 +9,6 @@ if (!user || !pass) {
     throw new Error("MISSING AUTH CREDENTIALS!");
 }
 
-console.log({
-    cwd: process.cwd(),
-    hasEmailUser: Boolean(process.env.EMAIL_USER),
-    hasEmailPassword: Boolean(process.env.EMAIL_PASSWORD),
-});
-
 export const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -22,12 +16,3 @@ export const transporter = nodemailer.createTransport({
         pass,
     }
 });
-
-(async () => {
-    try {
-        await transporter.verify();
-        console.log("SMTP authenticated successfully.");
-    } catch (err) {
-        throw new Error("Failed to Connect SMTP Server")
-    }
-})()
