@@ -6,9 +6,9 @@ import { useState } from 'react'
 import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@repo/ui/components/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card'
-import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@repo/ui/components/field'
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@repo/ui/components/input-group'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/ui/card'
+import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@repo/ui/components/ui/field'
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@repo/ui/components/ui/input-group'
 import { useAuth } from '../../hooks/use-auth'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -73,7 +73,7 @@ export function LoginForm() {
                     placeholder="••••••••"
                     {...register('password')}
                   />
-                  <InputGroupButton type="button" size="icon" aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((current) => !current)}>
+                  <InputGroupButton type="button" size={"icon-xs"} aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((current) => !current)}>
                     {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </InputGroupButton>
                 </InputGroup>
