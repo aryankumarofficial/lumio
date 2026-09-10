@@ -53,9 +53,19 @@ export const verifyAccountController = async (req: Request, res: Response, next:
         if (typeof token !== "string") {
             return res.status(400).json({error: 'Invalid Link'});
         }
-        const user = await verifyAccount({
+        const response = await verifyAccount({
             token
         })
+
+        if ("status" in response) {
+            return res.status(200).json({
+                success: true,
+                message: "Account Already verified"
+            })
+        }
+
+        const {user} = response;
+
         return res.status(200).json({
             success: true,
             message: `Account verified successfully`,
