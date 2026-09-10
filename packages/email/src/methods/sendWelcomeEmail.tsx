@@ -1,8 +1,8 @@
 import "dotenv/config";
 import {pretty, render} from "@react-email/render";
-import WelcomeEmail from "../templates/WelcomeEmail";
+import WelcomeEmail from "../templates/WelcomeEmail.js";
 import {SendMailOptions} from "nodemailer";
-import {transporter} from "../mailer";
+import {transporter} from "../mailer.js";
 
 interface SendWelcomeEmailProps {
     name: string;

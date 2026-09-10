@@ -1,7 +1,7 @@
 import {SendMailOptions} from "nodemailer";
 import {pretty, render} from "@react-email/render";
-import ResendVerificationEmail from "../templates/ResendVerificationEmail";
-import {transporter} from "../mailer";
+import ResendVerificationEmail from "../templates/ResendVerificationEmail.js";
+import {transporter} from "../mailer.js";
 
 interface ResendVerificationEmailProps {
     name: string;

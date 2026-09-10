@@ -1,6 +1,6 @@
-import {transporter} from "../mailer";
+import {transporter} from "../mailer.js";
 import {pretty, render} from "@react-email/render";
-import AccountActivationEmail from "../templates/AccountActivationEmail";
+import AccountActivationEmail from "../templates/AccountActivationEmail.js";
 import {SendMailOptions} from "nodemailer";
 
 interface SendVerificationEmailProps {
