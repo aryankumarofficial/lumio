@@ -32,7 +32,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         })
         return res.status(201).json({
             success: true,
-            message: `Signup Success! verify your account to access the App.`
+            message: `Account created successfully! Please verify your email to access the app.`
         })
     } catch (err) {
         next(err)
@@ -60,7 +60,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
         const isVerified = user.isVerified;
         if (!isVerified) {
-            return res.status(400).json({error: 'Please verify your account to access the App'})
+            return res.status(400).json({error: 'Please verify your email before signing in. Check your inbox for the verification link.'})
         }
         const token = signToken({userId: user.id, email: user.email})
 
