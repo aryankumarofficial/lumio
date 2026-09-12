@@ -1,6 +1,5 @@
-import {db, NewVerification, users, verification} from "@repo/db";
+import {db, NewVerification, users, verification, eq, gt, isNull} from "@repo/db";
 import {ValidVerificationInput} from "./verifiaction.type.js";
-import {gt, eq, isNull} from "drizzle-orm";
 import {hashToken} from "../../lib/token.js";
 
 export enum StatusType {

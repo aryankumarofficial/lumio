@@ -11,8 +11,7 @@ import {sharedRoutes} from './modules/shared/shared.routes.js'
 import {insightsRoutes} from './modules/insights/insights.routes.js'
 import {errorHandler} from './middleware/error.js'
 import {verificationRoutes} from "./modules/verification/verification.route.js";
-import {db} from "@repo/db";
-import {sql} from "drizzle-orm";
+import {checkDatabase} from "@repo/db";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -57,7 +56,7 @@ app.get("/", (_req, res) => {
 
 app.get('/health', async (_req, res) => {
     try {
-        await db.execute(sql`SELECT 1`);
+        await checkDatabase();
         return res.status(200).json({
             status: 'UP',
             timestamp: new Date().toISOString(),

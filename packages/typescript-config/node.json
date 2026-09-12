@@ -1,12 +1,10 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "extends": "./base.json",
-    "compilerOptions": {
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
-        "noEmit": false,
-        "types": [
-            "node"
-        ]
-    }
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "types": [
+      "node"
+    ]
+  }
 }

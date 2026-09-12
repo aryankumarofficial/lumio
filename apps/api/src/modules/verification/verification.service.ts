@@ -5,8 +5,7 @@ import {
     StatusType
 } from "./verification.repository.js";
 import {VerifyAccountInput} from "./verifiaction.type.js";
-import {and, db, eq, User, users, verification, VerificationType} from "@repo/db"
-import {gt, isNull} from "drizzle-orm";
+import {and, db, eq, User, users, verification, VerificationType, gt, isNull} from "@repo/db"
 import {generateRandomToken, hashToken} from "../../lib/token.js";
 import {resendVerificationEmail, sendVerificationEmail, sendWelcomeEmail} from "@repo/email"
 import {AppError} from "../../lib/errors/app-error.js";
