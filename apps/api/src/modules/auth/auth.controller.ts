@@ -17,6 +17,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
             return res.status(409).json({error: 'Email already in use'})
         }
 
+
         const passwordHash = await hashPassword(body.password)
 
         const [user] = await db
@@ -24,12 +25,14 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
             .values({name: body.name, email: body.email, passwordHash})
             .returning({id: users.id, name: users.name, email: users.email})
 
+
         if (!user) throw new Error('Failed to create user')
 
         await sendAccountVerification({
             userId: user.id,
             type: REQUEST_TYPE.ACCOUNT_CREATION
         })
+        console.log("[Signup] After email");
         return res.status(201).json({
             success: true,
             message: `Account created successfully! Please verify your email to access the app.`

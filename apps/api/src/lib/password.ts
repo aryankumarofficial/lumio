@@ -1,10 +1,18 @@
-import {argon2i, argon2Verify, setWASMModules} from 'argon2-wasm-edge'
-import argon2WASM from 'argon2-wasm-edge/wasm/argon2.wasm.json'
-import blake2bWASM from 'argon2-wasm-edge/wasm/blake2b.wasm.json'
+import {argon2id, argon2Verify, setWASMModules} from 'argon2-wasm-edge'
 
-await setWASMModules({
+// @ts-expect-error Cloudflare Workers exposes .wasm imports as WebAssembly.Module
+import argon2WASM from 'argon2-wasm-edge/wasm/argon2.wasm'
+
+// @ts-expect-error Cloudflare Workers exposes .wasm imports as WebAssembly.Module
+import blake2bWASM from 'argon2-wasm-edge/wasm/blake2b.wasm'
+
+setWASMModules({
     argon2WASM,
     blake2bWASM
+}).then(() => {
+    console.log('[Argon2] WASM registered');
+}).catch((e) => {
+    console.error("[Argon2] failed to register WASM: ", e)
 })
 
 const hashingParams = {
@@ -19,15 +27,15 @@ export async function hashPassword(plain: string): Promise<string> {
     const salt = new Uint8Array(16);
     crypto.getRandomValues(salt);
 
-    return argon2i({
+    return await argon2id({
         ...hashingParams,
         password: plain,
         salt
-    })
+    });
 }
 
 export async function verifyPassword(hash: string, plain: string): Promise<boolean> {
-    return argon2Verify({
+    return await argon2Verify({
         password: plain,
         hash
     })

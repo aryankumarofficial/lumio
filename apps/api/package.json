@@ -10,7 +10,8 @@
     "check-types": "tsc --noEmit",
     "cf:dev": "wrangler dev",
     "cf:deploy": "wrangler deploy",
-    "cf:types": "wrangler types"
+    "cf:types": "wrangler types",
+    "cf:logs": "wrangler tail lumio-api --format pretty"
   },
   "dependencies": {
     "@repo/ai": "workspace:*",

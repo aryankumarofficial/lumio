@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     async rewrites() {
         return [{
             source: "/api/:path*",
-            destination: "https://lumio-api-ufj1.onrender.com/:path*",
+            destination: "https://lumio-api.aryanak9163.workers.dev/:path*",
         }]
     }
 }
