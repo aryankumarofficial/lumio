@@ -1,7 +1,3 @@
-import {config} from "dotenv";
-import {fileURLToPath} from "url"
-import {dirname, resolve} from "path"
-import morgan from "morgan";
 import express, {Express} from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -13,16 +9,7 @@ import {errorHandler} from './middleware/error.js'
 import {verificationRoutes} from "./modules/verification/verification.route.js";
 import {checkDatabase} from "@repo/db";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-if (process.env.NODE_ENV === 'development') {
-    config({
-        path: resolve(__dirname, "..", '.env'),
-        override: false
-    })
-} else {
-    config();
-}
+import {httpServerHandler} from "cloudflare:node";
 
 const app: Express = express()
 
@@ -36,7 +23,19 @@ app.use(
 app.use(express.json())
 app.use(cookieParser())
 
-app.use(morgan("dev"));
+app.use((req, res, next) => {
+    const start = Date.now();
+
+    res.on("finish", () => {
+        const duration = Date.now() - start;
+
+        console.log(
+            `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`,
+        );
+    });
+
+    next();
+});
 
 app.use('/auth', authRoutes)
 app.use('/notes', notesRoutes)
@@ -78,13 +77,11 @@ app.use(errorHandler)
 
 console.log(`env from root: ${process.env.PORT} ${Number(process.env.PORT)} ${Number(process.env.PORT || 8080)}`)
 
-if (process.env.NODE_ENV === 'development') {
 
-    const port = Number(process.env.PORT || 4000)
+app.listen(3000, () => {
+    console.log(`API server running on port ${3000}`)
+})
 
-    app.listen(port, () => {
-        console.log(`API server running on port ${port}`)
-    })
-}
-
-export default app;
+export default httpServerHandler({
+    port: 3000
+});

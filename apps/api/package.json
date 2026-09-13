@@ -7,14 +7,17 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy",
+    "cf:types": "wrangler types"
   },
   "dependencies": {
     "@repo/ai": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/email": "workspace:*",
     "@repo/schemas": "workspace:*",
-    "argon2": "^0.43.0",
+    "argon2-wasm-edge": "^1.0.23",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
@@ -33,6 +36,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^22.15.3",
     "tsx": "^4.19.3",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "wrangler": "^4.131.1"
   }
 }
