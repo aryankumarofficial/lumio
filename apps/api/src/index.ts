@@ -7,9 +7,15 @@ import {sharedRoutes} from './modules/shared/shared.routes.js'
 import {insightsRoutes} from './modules/insights/insights.routes.js'
 import {errorHandler} from './middleware/error.js'
 import {verificationRoutes} from "./modules/verification/verification.route.js";
-import {checkDatabase} from "@repo/db";
+import {
+    createDb,
+    runWithDb,
+    checkDatabase
+} from "@repo/db";
 
 import {httpServerHandler} from "cloudflare:node";
+import {env} from "cloudflare:workers";
+
 
 const app: Express = express()
 
@@ -22,6 +28,7 @@ app.use(
 
 app.use(express.json())
 app.use(cookieParser())
+
 
 app.use((req, res, next) => {
     const start = Date.now();
@@ -36,6 +43,12 @@ app.use((req, res, next) => {
 
     next();
 });
+
+app.use((_req, _res, next) => {
+    const db = createDb(env.HYPERDRIVE.connectionString);
+
+    runWithDb(db, () => next())
+})
 
 app.use('/auth', authRoutes)
 app.use('/notes', notesRoutes)
