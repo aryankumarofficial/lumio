@@ -66,7 +66,7 @@ export const notesApi = {
 }
 
 export const sharedApi = {
-    get: (shareId: string) => request<{ note: Note }>(`/shared/${shareId}`),
+    get: (shareId: string) => request<{ note: SharedNote }>(`/shared/${shareId}`),
 }
 
 export const insightsApi = {
@@ -115,4 +115,8 @@ export interface Insights {
     topTags: (Tag & { useCount: number })[]
     aiStats: { totalGenerations: number; totalTokensUsed: number }
     weeklyActivity: { day: string; count: number }[]
+}
+
+export type SharedNote = Note & {
+    user: Pick<User, 'id' | 'name' | 'createdAt'>
 }
