@@ -5,7 +5,7 @@ import {authApi, type User} from '../lib/api'
 interface AuthState {
     user: User | null
     loading: boolean
-    login: (email: string, password: string) => Promise<void>
+    login: (email: string, password: string) => Promise<{ success: boolean, message: string }>
     signup: (name: string, email: string, password: string) => Promise<{ success: boolean, message: string }>
     logout: () => Promise<void>
     fetchMe: () => Promise<User | null>
@@ -17,8 +17,9 @@ export const useAuth = create<AuthState>()(
             user: null,
             loading: false,
             login: async (email, password) => {
-                const data = await authApi.login({email, password})
-                set({user: data.user})
+                const {user, success, message} = await authApi.login({email, password})
+                set({user})
+                return {success, message}
             },
             signup: async (name, email, password) => {
                 return await authApi.signup({name, email, password})

@@ -14,7 +14,8 @@ export function errorHandler(
         res
             .status(err.statusCode)
             .json({
-                error: err.message,
+                success: false,
+                message: err.message,
                 ...(err.code && {code: err.code})
             });
         return;
@@ -23,7 +24,8 @@ export function errorHandler(
     // Zod validation errors
     if (err instanceof ZodError) {
         res.status(400).json({
-            error: 'Validation failed',
+            success: false,
+            message: 'Validation failed',
             issues: err.errors.map((e) => ({
                 path: e.path.join('.'),
                 message: e.message
@@ -43,7 +45,8 @@ export function errorHandler(
         res
             .status(status)
             .json({
-                error: err.message,
+                success: false,
+                message: err.message,
                 code: err.code
             })
         return
@@ -51,5 +54,8 @@ export function errorHandler(
 
     // Unexpected Errors
     console.error('[API Error]', err)
-    res.status(500).json({error: 'Internal server error'})
+    res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+    })
 }

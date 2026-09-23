@@ -14,7 +14,10 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         })
 
         if (existing) {
-            return res.status(409).json({error: 'Email already in use'})
+            return res.status(409).json({
+                success: false,
+                message: 'Email already in use'
+            })
         }
 
 
@@ -32,7 +35,6 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
             userId: user.id,
             type: REQUEST_TYPE.ACCOUNT_CREATION
         })
-        console.log("[Signup] After email");
         return res.status(201).json({
             success: true,
             message: `Account created successfully! Please verify your email to access the app.`
@@ -51,37 +53,54 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         })
 
         if (!user) {
-            return res.status(401).json({error: 'Invalid credentials'})
+            return res.status(401).json({
+                message: 'Invalid credentials',
+                success: false,
+            })
         }
 
         const valid = await verifyPassword(user.passwordHash, body.password)
 
         if (!valid) {
-            return res.status(401).json({error: 'Invalid credentials'})
+            return res.status(401).json({
+                message: 'Invalid credentials',
+                success: false,
+            })
 
         }
 
         const isVerified = user.isVerified;
         if (!isVerified) {
-            return res.status(400).json({error: 'Please verify your email before signing in. Check your inbox for the verification link.'})
+            return res.status(400).json({
+                message: 'Please verify your email before signing in. Check your inbox for the verification link.',
+                success: false
+            })
         }
         const token = signToken({userId: user.id, email: user.email})
 
         res
             .cookie('token', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
+                secure: true,
+                sameSite: 'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             })
-            .json({user: {id: user.id, name: user.name, email: user.email}})
+            .json({
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                },
+                success: true,
+                message: 'Logged in successfully!'
+            })
     } catch (err) {
         next(err)
     }
 }
 
 export const logout = (_req: Request, res: Response) => {
-    res.clearCookie('token').json({success: true})
+    return res.clearCookie('token').json({success: true})
 }
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
@@ -91,7 +110,7 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
             req.headers.authorization?.replace('Bearer ', '')
 
         if (!token) {
-            res.status(401).json({error: 'Not authenticated'})
+            res.status(401).json({message: 'Not authenticated'})
             return
         }
 
@@ -104,7 +123,7 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
         })
 
         if (!user) {
-            res.status(404).json({error: 'User not found'})
+            res.status(404).json({message: 'User not found'})
             return
         }
 

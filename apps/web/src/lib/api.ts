@@ -23,7 +23,10 @@ export const authApi = {
     signup: (data: { name: string; email: string; password: string }) =>
         request<{ success: boolean, message: string }>('/auth/signup', {method: 'POST', body: JSON.stringify(data)}),
     login: (data: { email: string; password: string }) =>
-        request<{ user: User }>('/auth/login', {method: 'POST', body: JSON.stringify(data)}),
+        request<{ user: User, success: boolean, message: string }>('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        }),
     logout: () => request('/auth/logout', {method: 'POST'}),
     me: () => request<{ user: User }>('/auth/me'),
     requestVerification: (data: { email: string }) => request("/verify/request", {
